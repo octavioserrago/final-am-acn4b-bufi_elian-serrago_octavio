@@ -1,9 +1,12 @@
 package com.project.nutritionintellij;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
+
+
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -46,11 +49,17 @@ public class MainActivity extends AppCompatActivity {
             public void onComplete(@NonNull Task<AuthResult> task) {
                 if (task.isSuccessful()) {
                     Toast.makeText(MainActivity.this, "Login successful", Toast.LENGTH_SHORT).show();
-                    // Navigate to another activity or update the UI
                 } else {
                     Toast.makeText(MainActivity.this, "Authentication failed: " + task.getException().getMessage(), Toast.LENGTH_LONG).show();
                 }
             }
         });
+    }
+
+
+    public void signUp(View v) {
+
+        Intent intent = new Intent(MainActivity.this, SignUpActivity.class);
+        startActivity(intent);
     }
 }

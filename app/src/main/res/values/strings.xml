@@ -1,3 +1,9 @@
 <resources>
     <string name="app_name">NutritionIntellij</string>
+    <string name="nutrition_intellij">Nutrition Intellij</string>
+    <string name="email">Email</string>
+    <string name="password">Password</string>
+    <string name="sign_up">Sign Up</string>
+    <string name="log_in">Log In</string>
+    <string name="don_t_have_an_account_sign_up">Don\'t have an account? Sign Up</string>
 </resources>
