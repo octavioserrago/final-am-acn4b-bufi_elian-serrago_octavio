@@ -31,13 +31,14 @@
 
 
     <Button
+        android:onClick="login"
         android:id="@+id/buttonLogin"
         android:layout_width="112dp"
         android:layout_height="54dp"
         android:text="Log In"
         android:textColor="@android:color/white"
         android:textSize="16sp"
-        android:backgroundTint= "#005EA6"
+        android:backgroundTint= "#007AFF"
         android:gravity="center"
         android:padding="12dp"
         app:layout_constraintBottom_toTopOf="@+id/textViewSignUp"
