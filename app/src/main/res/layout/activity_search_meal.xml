@@ -1,0 +1,40 @@
+<!-- activity_search_meal.xml -->
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <EditText
+        android:id="@+id/etSearchQuery"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Ingrese el nombre del alimento"
+        android:inputType="text"/>
+
+    <Button
+        android:id="@+id/btnSearch"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/etSearchQuery"
+        android:layout_marginTop="2dp"
+        android:text="Buscar" />
+
+    <LinearLayout
+        android:id="@+id/llSearchResults"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/btnSearch"
+        android:layout_marginTop="22dp"
+        android:orientation="vertical"
+        android:padding="16dp" />
+
+    <!-- Botón para volver a la vista anterior -->
+    <Button
+        android:id="@+id/btnBack"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="16dp"
+        android:text="Volver"/>
+
+</RelativeLayout>
