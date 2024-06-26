@@ -9,7 +9,6 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.firebase.firestore.DocumentSnapshot;
-import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -21,7 +20,6 @@ public class MealAdapter extends RecyclerView.Adapter<MealAdapter.MealViewHolder
     public MealAdapter() {
         this.documentSnapshots = new ArrayList<>();
     }
-
 
     public void updateData(List<DocumentSnapshot> newSnapshots) {
         documentSnapshots.clear();
@@ -48,7 +46,6 @@ public class MealAdapter extends RecyclerView.Adapter<MealAdapter.MealViewHolder
     public int getItemCount() {
         return documentSnapshots.size();
     }
-
 
     public static class MealViewHolder extends RecyclerView.ViewHolder {
         TextView tvMealName;

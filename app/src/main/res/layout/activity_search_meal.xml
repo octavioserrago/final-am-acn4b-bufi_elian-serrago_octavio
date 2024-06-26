@@ -27,7 +27,7 @@
         android:orientation="vertical"
         android:padding="16dp" />
 
-    <!-- Botón para volver a la vista anterior -->
+
     <Button
         android:id="@+id/btnBack"
         android:layout_width="wrap_content"
