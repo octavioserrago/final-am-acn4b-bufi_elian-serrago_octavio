@@ -48,6 +48,8 @@ public class SignUpActivity extends AppCompatActivity {
                 if (task.isSuccessful()) {
 
                     Toast.makeText(SignUpActivity.this, "Sign Up successful", Toast.LENGTH_SHORT).show();
+
+
                     String userID = mAuth.getCurrentUser().getUid();
 
 
@@ -65,9 +67,11 @@ public class SignUpActivity extends AppCompatActivity {
                                     }
                                 }
                             });
-                    finish();
-                } else {
 
+                    // Puedes navegar a otra actividad o actualizar la UI aquí
+                    finish(); // Cerrar la actividad de registro
+                } else {
+                    // Error al crear usuario
                     Toast.makeText(SignUpActivity.this, "Sign Up failed: " + task.getException().getMessage(), Toast.LENGTH_LONG).show();
                 }
             }
@@ -100,4 +104,6 @@ class User {
         this.created_at = created_at;
     }
 }
+
+
 
