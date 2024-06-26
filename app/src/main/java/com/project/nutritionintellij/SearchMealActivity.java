@@ -5,12 +5,14 @@ import android.os.Bundle;
 import android.util.Log;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.bumptech.glide.Glide;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentReference;
@@ -32,7 +34,7 @@ public class SearchMealActivity extends AppCompatActivity {
 
     private FirebaseFirestore db;
     private FirebaseAuth mAuth;
-    private List<String> searchResults = new ArrayList<>();
+    private List<Food> searchResults = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -62,8 +64,10 @@ public class SearchMealActivity extends AppCompatActivity {
                 .addOnSuccessListener(queryDocumentSnapshots -> {
                     for (QueryDocumentSnapshot document : queryDocumentSnapshots) {
                         String foodName = document.getString("name");
-                        if (foodName != null) {
-                            searchResults.add(foodName);
+                        String foodImageUrl = document.getString("imgUrl");
+                        if (foodName != null && foodImageUrl != null) {
+                            Food food = new Food(foodName, foodImageUrl);
+                            searchResults.add(food);
                         }
                     }
                     updateUI();
@@ -75,28 +79,48 @@ public class SearchMealActivity extends AppCompatActivity {
     }
 
     private void updateUI() {
-        for (String foodName : searchResults) {
+        llSearchResults.removeAllViews();
+        for (Food food : searchResults) {
+            LinearLayout resultLayout = new LinearLayout(SearchMealActivity.this);
+            resultLayout.setOrientation(LinearLayout.HORIZONTAL);
+            resultLayout.setPadding(16, 16, 16, 16);
+
+
+            ImageView imageView = new ImageView(SearchMealActivity.this);
+
+            Glide.with(SearchMealActivity.this)
+                    .load(food.getImgUrl())
+                    .into(imageView);
+            imageView.setLayoutParams(new LinearLayout.LayoutParams(
+                    100, 100
+            ));
+
+
             TextView textView = new TextView(SearchMealActivity.this);
-            textView.setText(foodName);
-            textView.setPadding(8, 8, 8, 8);
+            textView.setText(food.getName());
+            textView.setLayoutParams(new LinearLayout.LayoutParams(
+                    LinearLayout.LayoutParams.WRAP_CONTENT,
+                    LinearLayout.LayoutParams.WRAP_CONTENT,
+                    1.0f
+            ));
+
 
             Button btnAddToFavorites = new Button(SearchMealActivity.this);
             btnAddToFavorites.setText("Añadir a favoritos");
-            btnAddToFavorites.setOnClickListener(v -> addToFavorites(foodName));
+            btnAddToFavorites.setOnClickListener(v -> addToFavorites(food.getName()));
 
-            LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(
-                    LinearLayout.LayoutParams.WRAP_CONTENT,
-                    LinearLayout.LayoutParams.WRAP_CONTENT
-            );
-            layoutParams.setMargins(0, 8, 0, 8);
-            btnAddToFavorites.setLayoutParams(layoutParams);
 
-            LinearLayout itemLayout = new LinearLayout(SearchMealActivity.this);
-            itemLayout.setOrientation(LinearLayout.VERTICAL);
-            itemLayout.addView(textView);
-            itemLayout.addView(btnAddToFavorites);
+            resultLayout.addView(imageView);
+            resultLayout.addView(textView);
+            resultLayout.addView(btnAddToFavorites);
 
-            llSearchResults.addView(itemLayout);
+
+            llSearchResults.addView(resultLayout);
+
+
+            LinearLayout.LayoutParams layoutParams = (LinearLayout.LayoutParams) resultLayout.getLayoutParams();
+            layoutParams.bottomMargin = 16;
+            resultLayout.setLayoutParams(layoutParams);
         }
     }
 
@@ -105,7 +129,6 @@ public class SearchMealActivity extends AppCompatActivity {
         if (currentUser != null) {
             String uid = currentUser.getUid();
             DocumentReference userRef = db.collection("users").document(uid);
-
 
             Map<String, Object> foodData = new HashMap<>();
             foodData.put("name", foodName);
@@ -125,7 +148,6 @@ public class SearchMealActivity extends AppCompatActivity {
             Toast.makeText(this, "Usuario no autenticado", Toast.LENGTH_SHORT).show();
         }
     }
-
 
     private void navigateToDashboard() {
         Intent intent = new Intent(SearchMealActivity.this, DashboardActivity.class);
