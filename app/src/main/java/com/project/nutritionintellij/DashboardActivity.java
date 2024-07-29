@@ -137,7 +137,7 @@ public class DashboardActivity extends AppCompatActivity {
             nameTextView.setText(food.getName());
 
             TextView kcalsTextView = new TextView(this);
-            kcalsTextView.setText(String.format(" Calories: %.2f kcal", food.getKcals()));
+            kcalsTextView.setText(String.format(" %.2f kcal", food.getKcals()));
 
             Button deleteButton = new Button(this);
             deleteButton.setText("Delete");
