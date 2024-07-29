@@ -5,16 +5,34 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
+
+    <Button
+        android:id="@+id/btnCreateFood"
+        android:layout_width="153dp"
+        android:layout_height="61dp"
+        android:backgroundTint="#007AFF"
+        android:text="Create Food"
+        android:textAllCaps="false"
+        android:textColor="#FFFFFF"
+        android:textSize="16sp"
+        app:layout_constraintBottom_toTopOf="@+id/ScrollView"
+        app:layout_constraintEnd_toStartOf="@+id/btnAddNewMeal"
+        app:layout_constraintHorizontal_bias="0.476"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.619" />
+
     <Button
         android:id="@+id/btnAddNewMeal"
         android:layout_width="179dp"
         android:layout_height="58dp"
+        android:layout_marginStart="216dp"
+        android:layout_marginTop="16dp"
         android:backgroundTint="#007AFF"
         android:text="@string/add_new_meal"
         android:textAllCaps="false"
         android:textColor="#FFFFFF"
         android:textSize="16sp"
-        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 

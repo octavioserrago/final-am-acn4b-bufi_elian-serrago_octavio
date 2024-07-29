@@ -40,6 +40,7 @@ public class DashboardActivity extends AppCompatActivity {
         setContentView(R.layout.activity_dashboard);
 
         btnAddNewMeal = findViewById(R.id.btnAddNewMeal);
+        Button btnCreateFood = findViewById(R.id.btnCreateFood);
         linearLayoutMeals = findViewById(R.id.linearLayoutMeals);
         textViewTotalCalories = findViewById(R.id.textViewTotalCalories);
 
@@ -51,8 +52,14 @@ public class DashboardActivity extends AppCompatActivity {
             startActivity(intent);
         });
 
+        btnCreateFood.setOnClickListener(v -> {
+            Intent intent = new Intent(DashboardActivity.this, CreateFoodActivity.class);
+            startActivity(intent);
+        });
+
         loadFavoriteFoods();
     }
+
 
     private void loadFavoriteFoods() {
         FirebaseUser currentUser = mAuth.getCurrentUser();
