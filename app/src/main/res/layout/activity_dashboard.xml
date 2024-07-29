@@ -3,56 +3,61 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:padding="16dp">
 
-
+    <!-- Button to Create Food -->
     <Button
         android:id="@+id/btnCreateFood"
-        android:layout_width="153dp"
-        android:layout_height="61dp"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
         android:backgroundTint="#007AFF"
         android:text="Create Food"
         android:textAllCaps="false"
         android:textColor="#FFFFFF"
         android:textSize="16sp"
-        app:layout_constraintBottom_toTopOf="@+id/ScrollView"
+        android:layout_marginEnd="8dp"
         app:layout_constraintEnd_toStartOf="@+id/btnAddNewMeal"
-        app:layout_constraintHorizontal_bias="0.476"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.619" />
+        app:layout_constraintWidth_percent="0.48" />
 
+    <!-- Button to Add New Meal -->
     <Button
         android:id="@+id/btnAddNewMeal"
-        android:layout_width="179dp"
-        android:layout_height="58dp"
-        android:layout_marginStart="216dp"
-        android:layout_marginTop="16dp"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
         android:backgroundTint="#007AFF"
-        android:text="@string/add_new_meal"
+        android:text="Add New Meal"
         android:textAllCaps="false"
         android:textColor="#FFFFFF"
         android:textSize="16sp"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        android:layout_marginStart="8dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/btnCreateFood"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintWidth_percent="0.48" />
 
+    <!-- ScrollView for List of Meals -->
     <ScrollView
         android:id="@+id/ScrollView"
-        android:layout_width="405dp"
-        android:layout_height="485dp"
-        android:layout_marginTop="8dp"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginTop="16dp"
+        app:layout_constraintTop_toBottomOf="@+id/btnCreateFood"
+        app:layout_constraintBottom_toTopOf="@+id/textViewTotalCalories"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/btnAddNewMeal">
+        app:layout_constraintStart_toStartOf="parent">
 
         <LinearLayout
             android:id="@+id/linearLayoutMeals"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            android:padding="16dp"></LinearLayout>
+            android:padding="16dp" />
     </ScrollView>
 
+    <!-- TextView for Total Calories -->
     <TextView
         android:id="@+id/textViewTotalCalories"
         android:layout_width="wrap_content"
@@ -60,9 +65,10 @@
         android:text="Total Calories: 0"
         android:textSize="16sp"
         android:textColor="#000000"
+        android:layout_marginTop="16dp"
+        app:layout_constraintTop_toBottomOf="@+id/ScrollView"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/ScrollView" />
+        app:layout_constraintStart_toStartOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

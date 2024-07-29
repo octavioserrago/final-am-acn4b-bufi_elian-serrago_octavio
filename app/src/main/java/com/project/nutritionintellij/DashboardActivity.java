@@ -74,7 +74,7 @@ public class DashboardActivity extends AppCompatActivity {
                         if (queryDocumentSnapshots.isEmpty()) {
                             showEmptyMessage();
                         } else {
-                            favoriteFoods.clear();  // Clear previous data
+                            favoriteFoods.clear();
                             for (QueryDocumentSnapshot document : queryDocumentSnapshots) {
                                 String foodName = document.getString("name");
                                 if (foodName != null) {
@@ -137,7 +137,7 @@ public class DashboardActivity extends AppCompatActivity {
             nameTextView.setText(food.getName());
 
             TextView kcalsTextView = new TextView(this);
-            kcalsTextView.setText(String.format("Calories: %.2f kcal", food.getKcals()));
+            kcalsTextView.setText(String.format(" Calories: %.2f kcal", food.getKcals()));
 
             Button deleteButton = new Button(this);
             deleteButton.setText("Delete");
@@ -158,10 +158,10 @@ public class DashboardActivity extends AppCompatActivity {
 
             linearLayoutMeals.addView(itemLayout);
 
-            totalCalories += food.getKcals();  // Accumulate total calories
+            totalCalories += food.getKcals();
         }
 
-        // Update total calories text view
+
         textViewTotalCalories.setText(String.format("Total Calories: %.2f", totalCalories));
     }
 
@@ -180,7 +180,7 @@ public class DashboardActivity extends AppCompatActivity {
                                     .addOnSuccessListener(aVoid -> {
                                         Toast.makeText(DashboardActivity.this, "Food removed", Toast.LENGTH_SHORT).show();
                                         favoriteFoods.removeIf(food -> food.getName().equals(foodName));
-                                        updateUI(); // Refresh UI
+                                        updateUI();
                                     })
                                     .addOnFailureListener(e -> {
                                         Log.e(TAG, "Error deleting food: " + e.getMessage());

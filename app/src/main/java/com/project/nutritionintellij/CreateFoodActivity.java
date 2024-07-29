@@ -1,7 +1,6 @@
 package com.project.nutritionintellij;
 
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -9,21 +8,16 @@ import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 public class CreateFoodActivity extends AppCompatActivity {
-
-    private static final String TAG = "CreateFoodActivity";
 
     private EditText editTextFoodName;
     private EditText editTextImgUrl;
     private EditText editTextKcals;
     private Button buttonSaveFood;
-
+    private Button buttonBack;
     private FirebaseFirestore db;
-    private FirebaseAuth mAuth;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -34,11 +28,12 @@ public class CreateFoodActivity extends AppCompatActivity {
         editTextImgUrl = findViewById(R.id.editTextImgUrl);
         editTextKcals = findViewById(R.id.editTextKcals);
         buttonSaveFood = findViewById(R.id.buttonSaveFood);
+        buttonBack = findViewById(R.id.buttonBack);
 
         db = FirebaseFirestore.getInstance();
-        mAuth = FirebaseAuth.getInstance();
 
         buttonSaveFood.setOnClickListener(v -> saveFood());
+        buttonBack.setOnClickListener(v -> onBackPressed());
     }
 
     private void saveFood() {
@@ -47,35 +42,24 @@ public class CreateFoodActivity extends AppCompatActivity {
         String kcalsStr = editTextKcals.getText().toString().trim();
 
         if (foodName.isEmpty() || imgUrl.isEmpty() || kcalsStr.isEmpty()) {
-            Toast.makeText(this, "All fields are required", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "Please fill in all fields", Toast.LENGTH_SHORT).show();
             return;
         }
 
-        double kcals;
         try {
-            kcals = Double.parseDouble(kcalsStr);
-        } catch (NumberFormatException e) {
-            Toast.makeText(this, "Invalid calories value", Toast.LENGTH_SHORT).show();
-            return;
-        }
+            double kcals = Double.parseDouble(kcalsStr);
 
-        FirebaseUser currentUser = mAuth.getCurrentUser();
-        if (currentUser != null) {
-            String uid = currentUser.getUid();
-
-
-            db.collection("foods")
-                    .add(new Food(foodName, imgUrl, kcals))
-                    .addOnSuccessListener(documentReference -> {
-                        Toast.makeText(CreateFoodActivity.this, "Food added", Toast.LENGTH_SHORT).show();
+            Food newFood = new Food(foodName, imgUrl, kcals);
+            db.collection("foods").document(foodName).set(newFood)
+                    .addOnSuccessListener(aVoid -> {
+                        Toast.makeText(CreateFoodActivity.this, "Food saved successfully", Toast.LENGTH_SHORT).show();
                         finish();
                     })
                     .addOnFailureListener(e -> {
-                        Log.e(TAG, "Error adding food: " + e.getMessage());
-                        Toast.makeText(CreateFoodActivity.this, "Error adding food", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(CreateFoodActivity.this, "Error saving food", Toast.LENGTH_SHORT).show();
                     });
-        } else {
-            Toast.makeText(this, "User not authenticated", Toast.LENGTH_SHORT).show();
+        } catch (NumberFormatException e) {
+            Toast.makeText(this, "Invalid calories format", Toast.LENGTH_SHORT).show();
         }
     }
 }
