@@ -65,8 +65,9 @@ public class SearchMealActivity extends AppCompatActivity {
                     for (QueryDocumentSnapshot document : queryDocumentSnapshots) {
                         String foodName = document.getString("name");
                         String foodImageUrl = document.getString("imgUrl");
-                        if (foodName != null && foodImageUrl != null) {
-                            Food food = new Food(foodName, foodImageUrl);
+                        Double kcal = document.getDouble("kcals");
+                        if (foodName != null && foodImageUrl != null && kcal != null) {
+                            Food food = new Food(foodName, foodImageUrl, kcal);
                             searchResults.add(food);
                         }
                     }
@@ -85,38 +86,29 @@ public class SearchMealActivity extends AppCompatActivity {
             resultLayout.setOrientation(LinearLayout.HORIZONTAL);
             resultLayout.setPadding(16, 16, 16, 16);
 
-
             ImageView imageView = new ImageView(SearchMealActivity.this);
-
             Glide.with(SearchMealActivity.this)
                     .load(food.getImgUrl())
                     .into(imageView);
-            imageView.setLayoutParams(new LinearLayout.LayoutParams(
-                    100, 100
-            ));
-
+            imageView.setLayoutParams(new LinearLayout.LayoutParams(100, 100));
 
             TextView textView = new TextView(SearchMealActivity.this);
-            textView.setText(food.getName());
+            textView.setText(food.getName() + " - " + food.getKcals() + " kcal");
             textView.setLayoutParams(new LinearLayout.LayoutParams(
                     LinearLayout.LayoutParams.WRAP_CONTENT,
                     LinearLayout.LayoutParams.WRAP_CONTENT,
                     1.0f
             ));
 
-
             Button btnAddToFavorites = new Button(SearchMealActivity.this);
             btnAddToFavorites.setText("Añadir a favoritos");
-            btnAddToFavorites.setOnClickListener(v -> addToFavorites(food.getName()));
-
+            btnAddToFavorites.setOnClickListener(v -> addToFavorites(food));
 
             resultLayout.addView(imageView);
             resultLayout.addView(textView);
             resultLayout.addView(btnAddToFavorites);
 
-
             llSearchResults.addView(resultLayout);
-
 
             LinearLayout.LayoutParams layoutParams = (LinearLayout.LayoutParams) resultLayout.getLayoutParams();
             layoutParams.bottomMargin = 16;
@@ -124,20 +116,21 @@ public class SearchMealActivity extends AppCompatActivity {
         }
     }
 
-    private void addToFavorites(String foodName) {
+    private void addToFavorites(Food food) {
         FirebaseUser currentUser = mAuth.getCurrentUser();
         if (currentUser != null) {
             String uid = currentUser.getUid();
             DocumentReference userRef = db.collection("users").document(uid);
 
             Map<String, Object> foodData = new HashMap<>();
-            foodData.put("name", foodName);
+            foodData.put("name", food.getName());
+            foodData.put("kcals", food.getKcals());
 
             userRef.collection("favoriteFoods")
                     .document()
                     .set(foodData)
                     .addOnSuccessListener(documentReference -> {
-                        Toast.makeText(SearchMealActivity.this, foodName + " añadido a favoritos", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(SearchMealActivity.this, food.getName() + " añadido a favoritos", Toast.LENGTH_SHORT).show();
                         navigateToDashboard();
                     })
                     .addOnFailureListener(e -> {
@@ -155,3 +148,4 @@ public class SearchMealActivity extends AppCompatActivity {
         finish();
     }
 }
+

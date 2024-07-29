@@ -28,6 +28,7 @@ public class DashboardActivity extends AppCompatActivity {
 
     private Button btnAddNewMeal;
     private LinearLayout linearLayoutMeals;
+    private TextView textViewTotalCalories;
 
     private FirebaseFirestore db;
     private FirebaseAuth mAuth;
@@ -40,6 +41,7 @@ public class DashboardActivity extends AppCompatActivity {
 
         btnAddNewMeal = findViewById(R.id.btnAddNewMeal);
         linearLayoutMeals = findViewById(R.id.linearLayoutMeals);
+        textViewTotalCalories = findViewById(R.id.textViewTotalCalories);
 
         db = FirebaseFirestore.getInstance();
         mAuth = FirebaseAuth.getInstance();
@@ -65,6 +67,7 @@ public class DashboardActivity extends AppCompatActivity {
                         if (queryDocumentSnapshots.isEmpty()) {
                             showEmptyMessage();
                         } else {
+                            favoriteFoods.clear();  // Clear previous data
                             for (QueryDocumentSnapshot document : queryDocumentSnapshots) {
                                 String foodName = document.getString("name");
                                 if (foodName != null) {
@@ -89,8 +92,9 @@ public class DashboardActivity extends AppCompatActivity {
                 .addOnSuccessListener(queryDocumentSnapshots -> {
                     for (QueryDocumentSnapshot document : queryDocumentSnapshots) {
                         String imgUrl = document.getString("imgUrl");
+                        Double kcals = document.getDouble("kcals");
                         if (imgUrl != null) {
-                            Food food = new Food(foodName, imgUrl);
+                            Food food = new Food(foodName, imgUrl, kcals);
                             favoriteFoods.add(food);
                         }
                     }
@@ -109,6 +113,8 @@ public class DashboardActivity extends AppCompatActivity {
 
     private void updateUI() {
         linearLayoutMeals.removeAllViews();
+        double totalCalories = 0.0;
+
         for (Food food : favoriteFoods) {
             LinearLayout itemLayout = new LinearLayout(this);
             itemLayout.setOrientation(LinearLayout.HORIZONTAL);
@@ -120,13 +126,66 @@ public class DashboardActivity extends AppCompatActivity {
                     .load(food.getImgUrl())
                     .into(imageView);
 
-            TextView textView = new TextView(this);
-            textView.setText(food.getName());
+            TextView nameTextView = new TextView(this);
+            nameTextView.setText(food.getName());
+
+            TextView kcalsTextView = new TextView(this);
+            kcalsTextView.setText(String.format("Calories: %.2f kcal", food.getKcals()));
+
+            Button deleteButton = new Button(this);
+            deleteButton.setText("Delete");
+            deleteButton.setOnClickListener(v -> {
+                deleteFoodFromFavorites(food.getName());
+            });
+
+            LinearLayout.LayoutParams textParams = new LinearLayout.LayoutParams(
+                    LinearLayout.LayoutParams.WRAP_CONTENT,
+                    LinearLayout.LayoutParams.WRAP_CONTENT
+            );
+            textParams.setMargins(10, 0, 0, 0);
 
             itemLayout.addView(imageView);
-            itemLayout.addView(textView);
+            itemLayout.addView(nameTextView);
+            itemLayout.addView(kcalsTextView);
+            itemLayout.addView(deleteButton);
 
             linearLayoutMeals.addView(itemLayout);
+
+            totalCalories += food.getKcals();  // Accumulate total calories
+        }
+
+        // Update total calories text view
+        textViewTotalCalories.setText(String.format("Total Calories: %.2f", totalCalories));
+    }
+
+    private void deleteFoodFromFavorites(String foodName) {
+        FirebaseUser currentUser = mAuth.getCurrentUser();
+        if (currentUser != null) {
+            String uid = currentUser.getUid();
+            db.collection("users")
+                    .document(uid)
+                    .collection("favoriteFoods")
+                    .whereEqualTo("name", foodName)
+                    .get()
+                    .addOnSuccessListener(queryDocumentSnapshots -> {
+                        for (QueryDocumentSnapshot document : queryDocumentSnapshots) {
+                            document.getReference().delete()
+                                    .addOnSuccessListener(aVoid -> {
+                                        Toast.makeText(DashboardActivity.this, "Food removed", Toast.LENGTH_SHORT).show();
+                                        favoriteFoods.removeIf(food -> food.getName().equals(foodName));
+                                        updateUI(); // Refresh UI
+                                    })
+                                    .addOnFailureListener(e -> {
+                                        Log.e(TAG, "Error deleting food: " + e.getMessage());
+                                        Toast.makeText(DashboardActivity.this, "Error deleting food", Toast.LENGTH_SHORT).show();
+                                    });
+                        }
+                    })
+                    .addOnFailureListener(e -> {
+                        Log.e(TAG, "Error finding food to delete: " + e.getMessage());
+                    });
+        } else {
+            Toast.makeText(this, "User not authenticated", Toast.LENGTH_SHORT).show();
         }
     }
 }
