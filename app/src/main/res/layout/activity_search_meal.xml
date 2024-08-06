@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     android:padding="16dp">
 
-    <!-- EditText for Search Query -->
+
     <EditText
         android:id="@+id/etSearchQuery"
         android:layout_width="0dp"
@@ -18,7 +18,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent" />
 
-    <!-- Button for Search -->
+
     <Button
         android:id="@+id/btnSearch"
         android:layout_width="0dp"
@@ -30,7 +30,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         android:layout_marginTop="8dp" />
 
-    <!-- LinearLayout for Search Results -->
+
     <LinearLayout
         android:id="@+id/llSearchResults"
         android:layout_width="0dp"
@@ -42,7 +42,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent" />
 
-    <!-- Button for Back -->
+
     <Button
         android:id="@+id/btnBack"
         android:layout_width="wrap_content"

@@ -25,8 +25,11 @@ import java.util.List;
 public class DashboardActivity extends AppCompatActivity {
 
     private static final String TAG = "DashboardActivity";
+    private static final int REQUEST_CODE_VIEW_FOODS = 1;
 
     private Button btnAddNewMeal;
+    private Button btnCreateFood;
+    private Button btnViewAllFoods;
     private LinearLayout linearLayoutMeals;
     private TextView textViewTotalCalories;
 
@@ -40,7 +43,8 @@ public class DashboardActivity extends AppCompatActivity {
         setContentView(R.layout.activity_dashboard);
 
         btnAddNewMeal = findViewById(R.id.btnAddNewMeal);
-        Button btnCreateFood = findViewById(R.id.btnCreateFood);
+        btnCreateFood = findViewById(R.id.btnCreateFood);
+        btnViewAllFoods = findViewById(R.id.btnViewAllFoods);
         linearLayoutMeals = findViewById(R.id.linearLayoutMeals);
         textViewTotalCalories = findViewById(R.id.textViewTotalCalories);
 
@@ -57,9 +61,23 @@ public class DashboardActivity extends AppCompatActivity {
             startActivity(intent);
         });
 
+        btnViewAllFoods.setOnClickListener(v -> {
+            Intent intent = new Intent(DashboardActivity.this, ViewAllFoodsActivity.class);
+            startActivityForResult(intent, REQUEST_CODE_VIEW_FOODS);
+        });
+
         loadFavoriteFoods();
     }
 
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if (requestCode == REQUEST_CODE_VIEW_FOODS && resultCode == RESULT_OK) {
+
+            loadFavoriteFoods();
+        }
+    }
 
     private void loadFavoriteFoods() {
         FirebaseUser currentUser = mAuth.getCurrentUser();
@@ -160,7 +178,6 @@ public class DashboardActivity extends AppCompatActivity {
 
             totalCalories += food.getKcals();
         }
-
 
         textViewTotalCalories.setText(String.format("Total Calories: %.2f", totalCalories));
     }

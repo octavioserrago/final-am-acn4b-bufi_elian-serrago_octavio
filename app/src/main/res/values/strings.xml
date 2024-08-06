@@ -8,4 +8,5 @@
     <string name="don_t_have_an_account_sign_up">Don\'t have an account? Sign Up</string>
     <string name="add_new_meal">Add new Meal</string>
     <string name="buscar_comida">Buscar comida</string>
+    <string name="image_desc">Descripción de la imagen</string>
 </resources>
